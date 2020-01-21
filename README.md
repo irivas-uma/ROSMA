@@ -15,6 +15,9 @@ This package contains a MATLAB GUI that collects data of the dVRK and a ros node
 * MATLAB - Tested with R2019b.
 * da Vinci Research Kit (dVRK) - Tested with the dVRK in The BioRobotics Institute, Scuola Superiore Sant'Anna, Pontedera, Italy.
 
+![screenshots](https://github.com/irivas-uma/ROSMA/blob/master/Resources/dvrk.png)
+
+
 ## To build
 
 ## To launch
