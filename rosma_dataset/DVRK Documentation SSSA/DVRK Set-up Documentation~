@@ -1,0 +1,76 @@
+*************************  DVRK DOCUMENTATION  *********************************
+*  Irene Rivas Blanco
+*  The Biorobotics Institute (SSSA) - July  2019
+********************************************************************************
+
+(1) Hay que encender los controladores, tanto del lado del paciente como del 
+    lado del controlador. 
+	- Cada controlador tiene dos interruptores.
+
+(2) Ir al path de los nodos del dvrk
+	$ cd catkin_ws
+	$ source devel_release/setup.bash
+	$ roscd dvrk_robot
+
+* NOTA: para entrar en la sesion los datos son:
+	- daVinci	
+	- rob202020
+
+(3) Comprobar que las conexiones firewire estan bien
+	$ qladisp x x
+* En la x x se ponen los numeros (del 0 al 8) de lo que queremos comprobar.
+Lo que es cada numero esta en la wiki 
+(https://github.com/jhu-dvrk/sawIntuitiveResearchKit/wiki//Hardware#22-testing-with-qladisp). 
+Esta dentro de la wiki publica, en FAQ.
+** Si no da error (no se actualizan los datos), hay que desconectar y conectar 
+el cable firewire del ordenador o incluso el de los controladores. 
+
+	$ qlacloserlays
+* Para comprobar que el circuito electrico esta cerrado
+	
+(4) Lanzar el nodo de la teleoperacion
+	$ rosrun dvrk_robot dvrk_console_json -j config/one-arm-PSM1.json 
+		-> Para lanzar solo un brazo
+	$ rosrun dvrk_robot dvrk_console_json -j config/full_system.json
+		-> Para lanzar los dos brazos
+
+* NOTA: El fichero de configuracion es el que dice la configuracion de la 
+teleoperacion, es decir, si vamos a usar un solo brazo o los dos. 
+Estos ficheros estan en la carpeta: 
+/home/catkin_ws/src/dvrk-ros/dvrk_robot/config
+	- one-arm-PSM1.json para el brazo derecho
+	- one-arm-PSM2.json para el brazo izquierdo
+	- TwoMasterTwoSlave.json para usar los dos brazos
+
+Dentro de estos ficheros podemos cambiar dos cosas:
+	- "arms"/"PSMX"/kinematics -> ahi ponemos el fichero que corresponde
+	a la cinematica de la herramienta que vamos a utilizar. En nuestro caso,
+	vamos a usar un fichero que no tiene offset, es decir, que la posicion 
+	de la herramienta que nos dan los topics es la de O6 (Figure 9 del documento
+	User Guide). Si quisieramos sacar el punto O7 tendriamos que cambiar el
+	"tooltip-offset" dentro del fichero de configuracion de la herramienta 
+	(psm-large-needle-driver.json). De hecho, se podrian hacer diferentes
+	ficheros para diferentes herramientas cambiando eso.
+
+* NOTA: el centro remoto de rotacion no se hace por software, sino que es por
+hardware. 
+
+(6) GUI de la teleoperacion
+	- Cuando lanzamos el nodo de la teleoperacion se abre una GUI. 
+	- Para arrancar el sistema hay que darle a "Enable all" -> Home
+	- Luego en teleop -> start
+	- "scale" es la escala entre el master y el patient side
+
+* NOTA: Hay que tener cuidado de que la temperatura no pase los 50° 
+(sino hay que apagar -> off, no apagar del todo). 
+
+(7) FOOT PEDAL
+	- Para teleoperar hay que tener pulsado el pedal de "COAG".
+	- El pedal de "CLUTCH" es para reposicionar los haptics sin mover los brazos.  
+
+(8) Lanzar el rviz
+	- (2)
+	- $ roslaunch dvrk_model arm_rviz.launch arm:=PSM1
+* Habria que probar diferentes configuraciones de arm para lanzar otras cosas
+ 	
+

@@ -1,0 +1,13 @@
+function handles = create(handles)
+
+T = table;
+T.id = {};
+T.name = {};
+T.surname = {};
+T.gender = {};
+T.age = {};
+
+handles.filename
+
+handles.T = T;
+writetable(handles.T,handles.filename);

@@ -1,0 +1,14 @@
+#ifndef _rosma_dataset_h
+#define _rosma_dataset_h
+
+#include <ros/ros.h>
+
+namespace rosma {
+    class dataset
+    {
+    public:
+    protected:
+    };
+}
+
+#endif

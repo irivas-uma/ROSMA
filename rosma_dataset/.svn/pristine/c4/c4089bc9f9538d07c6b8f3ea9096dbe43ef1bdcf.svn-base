@@ -1,0 +1,5 @@
+Id,Name,Surname,Gender,Age,B1,B2,B3,I1,I2,I3,I4,C1,C2
+S01,Salva,Alcazar,Female,34,0,1,0,0,0,0,0,0,0
+T01,Irene,Rivas,Female,34,0,0,1,0,0,0,0,0,0
+T02,Lucas,Rivas,Female,34,1,0,0,0,0,0,0,0,0
+T03,Nara,Rivas,Female,34,0,0,0,0,0,0,0,0,0

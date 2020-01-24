@@ -1,0 +1,20 @@
+*************************  DVRK TOPICS  ****************************************
+*  Irene Rivas Blanco
+*  The Biorobotics Institute (SSSA) - July  2019
+********************************************************************************
+
+(1) MASTER TOOL TOPICS (MTML & MTMR)
+
+- dvrk/MTMR/gripper_closed_event
+	- std_msgs/Bool
+	- Se pone a true cuando se esta cerrando la pinza, luego a false y ya publica mas hasta que se vuelve a cerrar la pinza
+
+- dvrk/MTMR/jacobian_body
+	- sdt_msgs/Float64MultiArray
+
+- dvrk/MTMR/jacobian_spatial
+	- sdt_msgs/Float64MultiArray
+
+- dvrk/MTMR/position_cartesian_current
+	- geometry_msgs/PoseStamped
+
