@@ -4,6 +4,8 @@
 #include <std_msgs/Bool.h>
 #include <sensor_msgs/JointState.h>
 #include <sensor_msgs/Joy.h>
+#include <sensor_msgs/CompressedImage.h>
+#include <sensor_msgs/Image.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TwistStamped.h>
@@ -11,18 +13,29 @@
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
+#include <rosbag/bag.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <rosbag/bag.h>
+#include "rosbag/recorder.h"
+#include "rosbag/stream.h"
+//#include <Recorder.h>
 
 using namespace std;
 
-ofstream File;
-string filename;
+ofstream File, IFile;
+string filename,ifilename;;
 
 float data[169];
+// std::vector<uint8_t> idata;
 
 bool isRecording(false);
 bool isFirst(true);
 bool isFinish(false);
-
+rosbag::Bag bag;
+sensor_msgs::Image image;
+rosbag::RecorderOptions options;
+  
 // LEFT MASTER TOOL MANIPULATOR
 void cb_mtml_position(const geometry_msgs::PoseStamped::ConstPtr& msg)
 {
@@ -33,6 +46,7 @@ void cb_mtml_position(const geometry_msgs::PoseStamped::ConstPtr& msg)
   data[4] = msg->pose.orientation.y;
   data[5] = msg->pose.orientation.z;
   data[6] = msg->pose.orientation.w;
+  std::cout<<"hola"<<std::endl;
 }
 
 void cb_mtml_velocity(const geometry_msgs::TwistStamped::ConstPtr& msg)
@@ -283,6 +297,11 @@ void cb_coag(const sensor_msgs::Joy::ConstPtr& msg)
   data[168] = msg->buttons[0];
 }
 
+void cb_image(const sensor_msgs::Image::ConstPtr& msg)
+{
+  image.data = msg->data;
+}
+
 void cb_start_recording(const std_msgs::String::ConstPtr& msg){
 	filename = msg-> data;
 	isRecording = true;
@@ -292,13 +311,15 @@ void cb_start_recording(const std_msgs::String::ConstPtr& msg){
 
 void cb_stop_recording(const std_msgs::Bool::ConstPtr& msg){
 	if (isRecording){
-		isFinish = true;}
+		isFinish = true;
+		}
 	isRecording = false;
 }
 
 void OpenRecordingFile(string filename){
 	
   File.open(filename.c_str());
+  IFile.open(ifilename.c_str());
   
   File
   << "MTML_position_x" << ", MTML_position_y" << ", MTML_position_z"
@@ -394,6 +415,13 @@ void RecordingFile (){
     <<"," << data[160] <<","<<data[161]<<","<<data[162]<<","<<data[163]<<","<<data[164]
     <<"," << data[165] <<","<<data[166]<<","<<data[167]<<","<<data[168]
     << endl;	
+    
+    //bag.write("chatter", ros::Time::now(), image);
+    
+   /* for(int i=0; i < idata.size(); i++){
+    IFile << idata[i]<<",";
+	}
+	IFile << endl;*/
 }
 
 int main(int argc, char** argv)
@@ -402,7 +430,7 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
   ros::Rate loop_rate(50);
 
-  ros::Subscriber sub[21];
+  ros::Subscriber sub[22];
   sub[0] = nh.subscribe("/dvrk/MTML/position_cartesian_current",1000, &cb_mtml_position);
   sub[1] = nh.subscribe("/dvrk/MTML/twist_body_current",1000, &cb_mtml_velocity);
   sub[2] = nh.subscribe("/dvrk/MTML/wrench_body_current",1000, &cb_mtml_effort);
@@ -429,33 +457,68 @@ int main(int argc, char** argv)
   sub[19] = nh.subscribe("/rosma/gui/stop_recording",1000, &cb_stop_recording);
   
   sub[20] = nh.subscribe("/dvrk/footpedal/coag",1000, &cb_coag);
+  
+  sub[21] = nh.subscribe("/usb_cam/image_raw",1000, &cb_image);
 
   //string path = "/home/uma/catkin_ws/dvrk_dataset/";
   //string filename = "data.csv";
   
-  
+    //  rosbag::Bag bag;
+    //bag.open("test.bag", rosbag::bagmode::Write);
+    
+/*
+  options.append_date = false;
+  options.trigger = false;
+  options.min_space = 0;
+  options.verbose = true;
+  options.prefix = "test";
+  options.split = false;
+  options.regex = false;
+  options.topics.push_back("/rosout");
+  options.max_duration = ros::Duration(1.0);
+  options.name = "test";
+*/
+
+int i;
+string path = "/media/irivas/TOSHIBA EXT/dvrkData/";
+bool stop = false;
+
   while(ros::ok())
   {
-	  
+	
 	if (isRecording){
 		if (isFirst){
 			ROS_INFO("Start Recording");
-			OpenRecordingFile(filename);
+			OpenRecordingFile(path + filename + ".csv");
+			options.prefix = path + filename;
+			options.record_all = true;
+			options.max_duration = ros::Duration(-1.0);
+			rosbag::Recorder recorder(options); 
+			i = recorder.run();	
+		    std::cout << i << std::endl;
 			isFirst = false;
+			stop = true;
 			}
-			
 		RecordingFile();
 	}
 	
-	if (isFinish){
+	if (isFinish && stop){
 		ROS_INFO("Stop Recording");
 		File.close();
 		isFinish = false;
+		exit(-1);
 	}
 	
     ros::spinOnce();
     loop_rate.sleep();
   }
 
+//bag.close();
+
   return(0);
 }
+
+// Esta solucion solo vale si se hace un postprocesado de los datos y se cortan los .bag en el tiempo que dice matlab que dura la tarea.
+// Probar a guardar solo el topic de la imagen con el bag.write
+// Sino se hace otro nodo igual que este, pero solo para generar los bag, y asi solo hay que cortar las imagenes, porque sino los csv tampoco se cortan.
+// NO OLVIDAR ponerle la fecha y la hora al principio de los csv (en la primera fila); y en la ultima fila poner tambien cuando se deja de grabar. 
