@@ -19,7 +19,7 @@
 #include <rosbag/bag.h>
 #include "rosbag/recorder.h"
 #include "rosbag/stream.h"
-//#include <Recorder.h>
+#include <ctime>
 
 using namespace std;
 
@@ -27,11 +27,15 @@ ofstream File, IFile;
 string filename,ifilename;;
 
 float data[169];
-// std::vector<uint8_t> idata;
 
 bool isRecording(false);
 bool isFirst(true);
 bool isFinish(false);
+
+time_t now;
+struct tm  tstruct;
+char       buf[80];
+    
 rosbag::Bag bag;
 sensor_msgs::Image image;
 rosbag::RecorderOptions options;
@@ -46,7 +50,6 @@ void cb_mtml_position(const geometry_msgs::PoseStamped::ConstPtr& msg)
   data[4] = msg->pose.orientation.y;
   data[5] = msg->pose.orientation.z;
   data[6] = msg->pose.orientation.w;
-  std::cout<<"hola"<<std::endl;
 }
 
 void cb_mtml_velocity(const geometry_msgs::TwistStamped::ConstPtr& msg)
@@ -321,7 +324,13 @@ void OpenRecordingFile(string filename){
   File.open(filename.c_str());
   IFile.open(ifilename.c_str());
   
+  // Getting current time
+    now = time(0);
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+    
   File
+  << "Date:" << buf << endl
   << "MTML_position_x" << ", MTML_position_y" << ", MTML_position_z"
   << ", MTML_orientation_x" << ", MTML_orientation_y" << ", MTML_orientation_z"<<", MTML_orientation_w"
   << ", MTML_velocity_linear_x" << ", MTML_velocity_linear_y" << ", MTML_velocity_linear_z"
@@ -494,8 +503,8 @@ bool stop = false;
 			options.record_all = true;
 			options.max_duration = ros::Duration(-1.0);
 			rosbag::Recorder recorder(options); 
-			i = recorder.run();	
-		    std::cout << i << std::endl;
+			//i = recorder.run();	
+		    // std::cout << i << std::endl;
 			isFirst = false;
 			stop = true;
 			}
@@ -504,9 +513,16 @@ bool stop = false;
 	
 	if (isFinish && stop){
 		ROS_INFO("Stop Recording");
+		
+		isFinish = false;	
+		 
+		now = time(0);
+		tstruct = *localtime(&now);
+		strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+		
+		File
+		<< "Date:" << buf << endl;
 		File.close();
-		isFinish = false;
-		exit(-1);
 	}
 	
     ros::spinOnce();
