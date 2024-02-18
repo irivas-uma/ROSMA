@@ -1,6 +1,5 @@
-<div align="center">
-<img src="files/system.jpg" width="100%">
-</div>
+
+<img src="media/system.JPG" width="100%">
 
 ------------------------------------------------
 Robotic Surgical Maneuver Dataset
@@ -16,8 +15,11 @@ Robotic Surgical Maneuver Dataset
 ------------------------------------------------
 Dataset recording
 ================================================
-
-[![Watch the video](https://www.youtube.com/watch?v=gEtWMc5EkiA)
+<div align="center">
+<a href="(https://www.youtube.com/watch?v=gEtWMc5EkiA)">
+<img src="media/youtube.png" width="100%">
+</a>
+</div>
 
 ## Contents
 The ROSMA dataset folder includes:
