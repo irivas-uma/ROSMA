@@ -8,8 +8,8 @@ Robotic Surgical Maneuver Dataset
 <b>ROSMA</b> is a surgical robotics dataset of three common training surgical tasks collected from the Da Vinci Research Kit (dVRK). ROSMA contains data from 207 trials of three maneuvers performed by 12 users. Data includes 160 kinematic variables recorded at 50 Hz along with video recordings collected at 15 frames per second with 1024 x 768 pixel resolution.
 
 <div align="right">
-<a href="http://camma.u-strasbg.fr/">
-<img src="[files/logo_cholect50.gif](https://github.com/irivas-uma/rosma/assets/44698279/bb168832-6697-4a79-a9a3-e2fd2acbd60)" width="10%">
+<a href="https://zenodo.org/records/3932964">
+<img src="https://github.com/irivas-uma/rosma/assets/44698279/bb168832-6697-4a79-a9a3-e2fd2acbd60" alt="image" width="10%">
 </a>
 </div>
 
