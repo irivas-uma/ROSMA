@@ -30,8 +30,8 @@ Robotic Surgical Maneuver Dataset
 </a>
 </div>
 
+
 ## <u>Research Papers</u>
- [![Publication](https://img.shields.io/badge/github-rendezvous-blue)](https://github.com/CAMMA-public/rendezvous)
  
 ## Contents
 The ROSMA dataset folder includes:
