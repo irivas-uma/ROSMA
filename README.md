@@ -33,7 +33,7 @@ Robotic Surgical Maneuver Dataset
 
 <div align="right">
 <a href="https://zenodo.org/records/3932964">
-<img src="https://img.shields.io/badge/Download ROSMA dataset-8A2BE2?style=for-the-badge">
+<img src="https://img.shields.io/badge/Download-8A2BE2?style=for-the-badge">
 </a>
 </div>
 <br>
@@ -66,7 +66,7 @@ Robotic Surgical Maneuver Dataset
 
 <div align="right">
 <a href="https://zenodo.org/records/10719714">
-<img src="https://img.shields.io/badge/Download ROSMAT24 dataset-8A2BE2?style=for-the-badge">
+<img src="https://img.shields.io/badge/Download-8A2BE2?style=for-the-badge">
 </a>
 </div>
 <br>
@@ -108,7 +108,7 @@ Robotic Surgical Maneuver Dataset
 
 <div align="right">
 <a href="https://zenodo.org/records/10719748">
-<img src="https://img.shields.io/badge/Download ROSMAG40 dataset-8A2BE2?style=for-the-badge">
+<img src="https://img.shields.io/badge/Download-8A2BE2?style=for-the-badge">
 </a>
 </div>
 <br>
